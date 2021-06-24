@@ -13,3 +13,7 @@ yarn typeorm migration:revert #to revert last migration
 yarn typeorm entity:create -n User
 
 #unidade
+
+yarn add express-async-errors
+
+#embuscadeevolução
