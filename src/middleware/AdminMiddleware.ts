@@ -1,17 +1,24 @@
 import { NextFunction, Request, Response } from "express";
+import { getCustomRepository } from "typeorm";
+import { UserRepository } from "../repositories/UserRepository";
 
 
 class AdminMiddleware {
-    handle(request: Request, response: Response, next: NextFunction) {
-        const admin = true;
+    async handle(request: Request, response: Response, next: NextFunction) {
+        const { user_id } = request;
 
-        if (admin) {
-            return next();
+        const userRepository = getCustomRepository(UserRepository);
+
+        const {admin} = await userRepository.findOne(user_id);
+
+        if (!admin) {
+            return response.status(401).json({
+                error: "User not authorized",
+            });
         }
 
-        return response.status(401).json({
-            error: "User not authorized",
-        });
+        return next();
+        
     }
 }
 
